@@ -1,0 +1,15 @@
+#Using ubuntu as base image
+FROM ubuntu
+
+#Updating apt-get and installing python,pip,flask and curl
+RUN apt-get update && \
+	apt-get install -y python && \
+	apt-get install -y python-pip && \
+	pip install flask && \
+	apt-get install -y curl
+
+#Copying simple flask app to root
+COPY flask_app.py /flask_app.py
+
+#Running the app
+CMD ["python","flask_app.py"]
