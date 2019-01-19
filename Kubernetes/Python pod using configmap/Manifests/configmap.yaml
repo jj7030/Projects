@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hello-python
+data:
+  hello.py: |
+    import time
+    print("Hello world!!!")
+    time.sleep(120)

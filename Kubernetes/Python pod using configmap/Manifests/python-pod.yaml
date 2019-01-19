@@ -1,0 +1,22 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hello-python
+  labels:
+    name: hello-python
+spec:
+  containers:
+  - name: hello-python
+    image: jj7030/jj:alpine-with-python
+    command: ["python"]
+    args: ["/home/hello.py"]
+    volumeMounts:
+    - name: config-file
+      mountPath: /home
+  volumes:
+  - name: config-file
+    configMap: 
+      name: hello-python
+  imagePullSecrets:
+  - name: private-registry-key
