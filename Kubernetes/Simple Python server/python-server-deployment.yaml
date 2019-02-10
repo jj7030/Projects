@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-server
+  labels:
+    app: python-server
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: python-server
+  template:
+    metadata:
+      labels:
+        app: python-server
+    spec:
+      containers:
+      - name: python-server
+        image: python:2.7
+        command: ["/bin/bash"]
+        args: ["-c","echo \"Hello from $(hostname)\">index.html;python -m SimpleHTTPServer 8080"]
+        ports:
+          - containerPort: 8080
