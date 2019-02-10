@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  labels:
+    app: prometheus
+    tag: prom-stack
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 9090
+          command: ["/bin/prometheus"]
+          args: ["--config.file=/home/prometheus.yml"]
+          volumeMounts:
+            - name: prom-config
+              mountPath: /home
+      volumes:
+        - name: prom-config
+          configMap:
+            name: prom-cm
+
+
