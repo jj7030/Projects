@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: git-project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: git-project
+  template:
+    metadata:
+      labels:
+        app: git-project
+    spec:
+      initContainers:
+      - name: init-setup
+        image: jj7030/jj:alpine-with-git-python
+        command: ["sh","-c","./home/git-setup-script.sh"]
+        volumeMounts:
+        - name: git-script
+          mountPath: /home
+        - name: common-vol
+          mountPath: /home/data
+      containers:
+      - name: trial
+        image: jj7030/jj:alpine-with-git-python
+        command: ["sh","-c","/home/git-pull.sh"]
+        volumeMounts:
+        - name: git-pull
+          mountPath: /home
+        - name: common-vol
+          mountPath: /home/data
+      imagePullSecrets:
+      - name: private-registry-key
+      volumes:
+      - name: git-script
+        configMap:
+          name: git-cm
+          items:
+          - key: git-setup-script.sh
+            path: git-setup-script.sh
+          defaultMode: 0777
+      - name: git-pull
+        configMap:
+          name: git-cm
+          items:
+          - key: git-pull.sh
+            path: git-pull.sh
+          defaultMode: 0777
+      - name: common-vol
+        emptyDir: {}

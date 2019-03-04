@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: git-cm
+data:
+  git-setup-script.sh: |
+    cd /home/data
+    git init
+    git remote add origin -f https://github.com/jj7030/Projects.git
+    git config core.sparsecheckout true
+    echo "Python/*" >> .git/info/sparse-checkout
+    git pull origin master
+  git-pull.sh:  |
+    cd /home/data/Python
+    while true
+    do
+      git pull origin master
+      echo "executing pull"
+      sleep 3
+    done
